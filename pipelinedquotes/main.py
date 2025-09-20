@@ -1,13 +1,11 @@
 from fastapi import FastAPI
 
-def __init__(self, endpoint):
-    self.endpoint = "/health"
+app = FastAPI()
 
 def root():
     return {{"status": "ok"}, "200 OK"}
 
-def health_ping(self):
-    app = FastAPI()
-    @app.get(self.endpoint)
-    def root():
-        return {{"status": "ok"}, "200 OK"}
+def health_ping():
+    @app.get("/health")
+    def health():
+        return {"status": "ok"}
