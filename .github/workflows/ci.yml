@@ -1,0 +1,51 @@
+name: Python and Docker CI
+
+on:
+  push:
+    branches: ["main"]
+  pull:
+    branches: ["main"]
+
+jobs:
+  precheck:
+    runs-on: ubuntu-latest
+    name: Stabalization Of Environment 
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Setting Up Python
+        uses: actions/setup-python@v5
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+  lint:
+    runs-on: ubuntu-latest
+    name: Run Linting Job
+    steps:
+      - name: Lint With ruff
+        run: |
+          ruff check .
+          ruff format --check .
+  build:
+    runs-on: ubuntu-latest
+    name: Build Dockerfile
+    steps: 
+      - name: Compile
+        run: |
+          docker run -d --name proof-of-docker quotes-api
+          docker log proof-of-docker
+      - name: Check for proof
+        if: ${{proof-of-docker == False}}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Dockerfile not built properly...')
+      - name: Kill the container
+        run: |
+          docker kill proof-of-docker
+
+
+
