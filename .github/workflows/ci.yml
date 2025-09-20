@@ -36,13 +36,14 @@ jobs:
       - name: Compile
         run: |
           docker run -d --name proof-of-docker quotes-api
-          docker log proof-of-docker
-      - name: Check for proof
-        if: ${{proof-of-docker == False}}
-        uses: actions/github-script@v6
+      - name: Verify Docker Action
+        uses: christopher-dG/verify-docker-action@v1.0.0
         with:
-          script: |
-            core.setFailed('Dockerfile not built properly...')
+    # Docker image to verify (e.g. foo/bar:1.2.3)
+          image: quotes-api
+    # Expected image digest (e.g. sha256:abcdef)
+          digest: 2c938e882f87b593486f913fbbc7ba2949e78f9b033bdc2504dbc44f711184f6
+          
       - name: Kill the container
         run: |
           docker kill proof-of-docker
