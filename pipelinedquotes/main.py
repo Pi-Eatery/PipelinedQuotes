@@ -9,10 +9,13 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+
 def setup_logging():
     console_handler = logging.StreamHandler()
-    file_handler = logging.FileHandler('piquotes.log', mode='a')
-    formatter = logging.Formatter('%(asctime)s| LINE#%(lineno)d [%(levelname)s:%(levelno)s]  --  %(message)s')
+    file_handler = logging.FileHandler("piquotes.log", mode="a")
+    formatter = logging.Formatter(
+        "%(asctime)s| LINE#%(lineno)d [%(levelname)s:%(levelno)s]  --  %(message)s"
+    )
 
     console_handler.setLevel(logging.INFO)
     console_handler.setFormatter(formatter)
@@ -24,12 +27,15 @@ def setup_logging():
     logger.addHandler(file_handler)
     return
 
+
 load_dotenv()
 setup_logging()
+
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.get("/quotes")
 def quotes():
@@ -38,6 +44,7 @@ def quotes():
         return scraped_data
     except Exception:
         raise HTTPException(status_code=500, detail="Error scraping the source")
+
 
 def scrape():
     quotes_small_list = []
@@ -49,14 +56,14 @@ def scrape():
     response = requests.get(url_to_hold, headers=ethical_header)
     response.raise_for_status()
     logger.info("Successfully reached the website.")
-    soup = BeautifulSoup(response.text, 'html.parser')
-    quote_containers = soup.find_all('div', class_='quote')
+    soup = BeautifulSoup(response.text, "html.parser")
+    quote_containers = soup.find_all("div", class_="quote")
     logger.info("Found all the quotes...")
 
     for container in quote_containers:
-        text_element = container.find('span', class_='text')
-        author_element = container.find('small', class_='author')
-        
+        text_element = container.find("span", class_="text")
+        author_element = container.find("small", class_="author")
+
         if text_element and author_element:
             logger.info("Found a quote and its author")
             quote_text = text_element.get_text(strip=True)
