@@ -35,11 +35,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build and Export Image
+      - name: Build and Export Tar Ball 
         uses: docker/build-push-action@v6
         with:
           tags: quotes-api
           outputs: type=tar,dest=${{runner.temp}}/quotes-api.tar
+
+      - name: Build and Export Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          tags: quotes-api
+          outputs: type=docker,dest=${{runner.temp}}/quotes-api
 
       - name: Start the container
         run: |
