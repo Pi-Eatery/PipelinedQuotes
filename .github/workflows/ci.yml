@@ -73,11 +73,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: quotes-api
-          path: ${{runner.temp}}
+          path: . 
     
       - name: Load Image
         run: |
-          docker load --input /app/quotes-api.tar
+          docker load --input ./quotes-api.tar
 
       - name: Aqua Security Trivy
   # You may pin to the exact commit or the version.
