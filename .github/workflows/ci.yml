@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           tags: quotes-api
-          outputs: type=docker,dest=${{runner.temp}}/quotes-api
+          outputs: type=image,dest=${{runner.temp}}/quotes-api
 
       - name: Start the container
         run: |
