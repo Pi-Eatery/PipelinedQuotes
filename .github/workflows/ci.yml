@@ -38,8 +38,8 @@ jobs:
       - name: Build and Export Image
         uses: docker/build-push-action@v6
         with:
-          tags: quotes-api:latest
-          outputs: type=docker,dest=${{runner.temp}}/quotes-api.tar
+          tags: quotes-api
+          outputs: type=tar,dest=${{runner.temp}}/quotes-api.tar
 
       - name: Start the container
         run: |
