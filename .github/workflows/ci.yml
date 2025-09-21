@@ -14,8 +14,6 @@ jobs:
     
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          ref: main
           
       - name: Setting Up Python
         uses: actions/setup-python@v5
@@ -34,27 +32,37 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Dockerfile
     steps: 
-      - name: Build
-        run: |
-          docker build -t quotes-api .
-          
-      - name: Compile
-        run: |
-          docker run -d --name proof-of-docker quotes-api
+      - name: Checkout Repository
+        uses: action/checkout@v4
 
-      - name: Check for container
+      - name: Build and Export Image
+        uses: docker/build-push-actions@v6
+        with:
+          tags: quotes-api:latest
+          outputs: type=docker,dest=${{runner.temp}}/quotes-api.tar
+
+      - name: Start the container
         run: |
-          container_name = "proof-of-docker"
-          if $(docker inspect -f "{{.state.status}}" "$container_name" | grep -q "running"; then
-            echo "The container '$container_name' is running."
-          else:
-            echo "The conatiner '$container_name' is not running."
-            exit 1
-          fi
+          docker run -d --rm quotes-api
+
+      - name: Smoke-Check
+        uses: stringbean/docker-healthcheck-action@v1
+        with:
+          container: quotes-api
+          wait-time: 30
+          require-healthy: true
+
+      - name: Upload Image
+        uses: actions/upload-artifacts
+        with:
+          name: quotes-api
+          path: ${{runner.temp}}/quotes-api.tar
           
-      - name: Kill the container
-        run: |
-          docker kill proof-of-docker
+  scan:
+    runs-on: ubuntu-latest
+    name: Docker vuln check
+    
+
 
 
 
