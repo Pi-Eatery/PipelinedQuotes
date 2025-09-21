@@ -33,10 +33,10 @@ jobs:
     name: Build Dockerfile
     steps: 
       - name: Checkout Repository
-        uses: action/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Build and Export Image
-        uses: docker/build-push-actions@v6
+        uses: docker/build-push-action@v6
         with:
           tags: quotes-api:latest
           outputs: type=docker,dest=${{runner.temp}}/quotes-api.tar
@@ -53,7 +53,7 @@ jobs:
           require-healthy: true
 
       - name: Upload Image
-        uses: actions/upload-artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: quotes-api
           path: ${{runner.temp}}/quotes-api.tar
