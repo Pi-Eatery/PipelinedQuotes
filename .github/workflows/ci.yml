@@ -103,7 +103,7 @@ jobs:
           image: ghcr.io/${{github.repository}}
           tags: |
             type=sha
-            type=raw,value=latest,enable=${{branch}}
+            type=raw,value=latest,enable={{branch}}
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
