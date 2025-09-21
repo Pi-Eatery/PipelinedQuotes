@@ -40,7 +40,7 @@ jobs:
         with:
           tags: quotes-api
           outputs: |
-            type=docker,dest=${{runner.temp}}/quotes-api.tar
+            type=tar,dest=${{runner.temp}}/quotes-api.tar
             type=docker
 
       - name: Start the container
