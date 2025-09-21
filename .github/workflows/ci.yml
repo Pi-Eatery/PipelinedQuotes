@@ -73,7 +73,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: quotes-api
-          path: ${{runner.temp}}
+          path: /app
     
       - name: Load Image
         run: |
