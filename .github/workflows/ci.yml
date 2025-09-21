@@ -84,7 +84,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: scan
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.refs == 'refs/heads/main'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -100,7 +100,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          image: ghcr.io/${{github.repository}}
+          images: ghcr.io/${{github.repository}}
           tags: |
             type=sha
             type=raw,value=latest
