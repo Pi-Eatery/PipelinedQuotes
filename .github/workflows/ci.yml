@@ -77,7 +77,7 @@ jobs:
     
       - name: Load Image
         run: |
-          docker load quotes-api
+          docker load --input ${{RUNNER.TEMP}}/quotes-api.tar
 
       - name: Aqua Security Trivy
   # You may pin to the exact commit or the version.
