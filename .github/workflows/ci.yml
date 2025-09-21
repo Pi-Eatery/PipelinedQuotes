@@ -29,18 +29,28 @@ jobs:
         run: |
           ruff check .
           ruff format --check .
+          
   build:
     runs-on: ubuntu-latest
     name: Build Dockerfile
     steps: 
+      - name: Build
+        run: |
+          docker build -t quotes-api .
+          
       - name: Compile
         run: |
           docker run -d --name proof-of-docker quotes-api
-      - name: Verify Docker Action
-        uses: christopher-dG/verify-docker-action@v1.0.0
-        with:
-    # Expected image digest (e.g. sha256:abcdef)
-          digest: 2c938e882f87b593486f913fbbc7ba2949e78f9b033bdc2504dbc44f711184f6
+
+      - name: Check for container
+        run: |
+          container_name = "proof-of-docker"
+          if $(docker inspect -f "{{.state.status}}" "$container_name" | grep -q "running"; then
+            echo "The container '$container_name' is running."
+          else:
+            echo "The conatiner '$container_name' is not running."
+            exit 1
+          fi
           
       - name: Kill the container
         run: |
