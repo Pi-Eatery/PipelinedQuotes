@@ -39,8 +39,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           tags: quotes-api
-          outputs: |
-            type=docker,dest=${{runner.temp}}/quotes-api.tar
 
       - name: Start the container
         run: |
@@ -53,12 +51,6 @@ jobs:
           wait-time: 30
           require-healthy: true
       
-      - name: Upload Image
-        uses: actions/upload-artifact@v4
-        with:
-          name: quotes-api
-          path: ${{runner.temp}}/quotes-api.tar
-
       - name: Stop the Container
         if: always()
         run: docker stop quotes-api
@@ -68,15 +60,13 @@ jobs:
     name: Docker vuln check
     needs: build
     steps:
-      - name: Download Image
-        uses: actions/download-artifact@v4
-        with:
-          name: quotes-api
-          path: . 
+      - name: Checkout Repository
+        uses: actions/checkout@v4
     
-      - name: Load Image
-        run: |
-          docker load --input quotes-api.tar
+      - name: Build and Export Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          tags: quotes-api
 
       - name: Aqua Security Trivy
   # You may pin to the exact commit or the version.
