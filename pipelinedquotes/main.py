@@ -36,13 +36,12 @@ def quotes():
     try:
         scraped_data = scrape()
         return scraped_data
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Error scraping the source")
 
 def scrape():
     quotes_small_list = []
     ethical_header = {"User-Agent": "My-First-Scraper/2.0"}
-    url_to_scrape = ""
 
     logger.info("Currently looking for the website specified in the environment\n")
     url_to_hold = os.getenv("SCRAPING_URL")
@@ -64,10 +63,6 @@ def scrape():
             author_name = author_element.get_text(strip=True)
             quotes_small_list.append({"text": quote_text, "author": author_name})
             logger.info("Adding multiple key pairs now.")
-            next_page = soup.find('li', class_='next')
-            if next_page and next_page.find('a'):
-                url_sub = next_page.find('a')['href']
-                url_to_scrape = os.path.join(url_to_hold, url_sub)
         else:
             url_to_hold = None
     return quotes_small_list
