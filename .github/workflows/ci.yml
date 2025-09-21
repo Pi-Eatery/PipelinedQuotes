@@ -40,12 +40,11 @@ jobs:
         with:
           tags: quotes-api
           outputs: |
-            type=tar,dest=${{runner.temp}}/quotes-api.tar
-            type=docker
+            type=docker,dest=${{runner.temp}}/quotes-api.tar
 
       - name: Start the container
         run: |
-          docker run -d --rm --name quotes-api quotes-api
+          docker run -d --name quotes-api quotes-api
 
       - name: Smoke-Check
         uses: stringbean/docker-healthcheck-action@v1
